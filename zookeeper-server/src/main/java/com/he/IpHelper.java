@@ -12,8 +12,11 @@ public class IpHelper {
     public static String getIp() throws SocketException {
         return Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
                 .flatMap(i -> Collections.list(i.getInetAddresses()).stream())
-                .filter(ip -> ip instanceof Inet4Address && ip.isSiteLocalAddress())
+                .filter(ip ->
+                        ip instanceof Inet4Address
+                )
                 .findFirst().orElseThrow(RuntimeException::new)
                 .getHostAddress();
     }
+
 }
