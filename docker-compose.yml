@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: zookeeper:3.4.14
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181
+    volumes:
+      - zk_data:/data
+      - zk_datalog:/datalog
+
+  zookeeper-server:
+    build: .
+    ports:
+      - "8080-8090:8080-8090"
+    environment:
+      - ZOOKEEPER_CONNECT_STRING=zookeeper:2181
+      - ZOOKEEPER_TIMEOUT=2000
+      - SERVER_REGISTER_PATH=/servers/test-me
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+
+volumes:
+  zk_data:
+  zk_datalog:
